@@ -1,0 +1,85 @@
+name: Deploy to GitHub Pages
+
+on:
+  push:
+    branches: [main]
+  # Lets the first run be retried after enabling Pages, with no empty commit.
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+concurrency:
+  group: pages
+  # false, not true: cancelling mid-deploy would abort a publish already in
+  # flight. This is a deploy pipeline, so let a running one finish.
+  cancel-in-progress: false
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v7
+
+      - name: Set up Node
+        uses: actions/setup-node@v7
+        with:
+          node-version: 22
+          cache: npm
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Type check
+        run: npx astro check
+
+      - name: Build site
+        run: npx astro build
+
+      - name: Install Chromium
+        run: npx playwright install --with-deps chromium
+
+      # Server lifetime is kept inside a single step. Backgrounding a server in
+      # one step and using it from the next relies on the orphaned process
+      # surviving the step boundary, which is unspecified and fails
+      # intermittently.
+      #
+      # `astro preview --background` is Astro 7's managed daemon: it returns
+      # only once the server is accepting connections, so no readiness polling
+      # is needed, and `astro preview stop` shuts it down deterministically.
+      - name: Generate resume PDF and audit accessibility
+        run: |
+          set -euo pipefail
+
+          npx astro preview --background --port 4321
+          trap 'npx astro preview stop || true' EXIT
+
+          # Writes into dist/ AFTER the build, since astro build wipes it, and
+          # before the artifact is uploaded below.
+          node scripts/make-resume-pdf.mjs
+
+          # Fails the build on a contrast, heading-order or alt-text
+          # regression, in both themes.
+          node scripts/audit-a11y.mjs
+        env:
+          PDF_BASE_URL: http://localhost:4321
+          PREVIEW_URL: http://localhost:4321
+
+      - name: Upload Pages artifact
+        uses: actions/upload-pages-artifact@v3
+        with:
+          path: ./dist
+
+  deploy:
+    needs: build
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - name: Deploy to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v5
