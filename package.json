@@ -16,7 +16,9 @@
     "resume:pdf": "node scripts/make-resume-pdf.mjs",
     "astro": "astro",
     "fonts:vendor": "node scripts/vendor-fonts.mjs",
-    "screenshot": "node scripts/screenshot.mjs"
+    "screenshot": "node scripts/screenshot.mjs",
+    "icons": "node scripts/make-icons.mjs",
+    "audit:a11y": "node scripts/audit-a11y.mjs"
   },
   "dependencies": {
     "@astrojs/mdx": "^7.0.5",

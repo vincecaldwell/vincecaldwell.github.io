@@ -24,9 +24,12 @@ const projects = await getPublishedProjects();
       <ul class="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
         {projects.map((entry, i) => (
           <Reveal as="li" delay={Math.min(i, 5) * 60} class="flex">
+            {/* h2: these sit directly under the page h1, with no section
+                heading between. */}
             <ProjectCard
               entry={entry}
               loading={i === 0 ? 'eager' : 'lazy'}
+              headingLevel="h2"
               class="w-full"
             />
           </Reveal>

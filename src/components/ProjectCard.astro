@@ -7,10 +7,21 @@ interface Props {
   entry: Project;
   /** Eager-load the first card's image; it is often the LCP element. */
   loading?: 'lazy' | 'eager';
+  /**
+   * Heading level for the card title, so cards slot into the surrounding
+   * outline without skipping a level. Use h2 directly under a page h1 (the
+   * projects index) and h3 beneath a section h2 (the home page).
+   */
+  headingLevel?: 'h2' | 'h3';
   class?: string;
 }
 
-const { entry, loading = 'lazy', class: className }: Props = Astro.props;
+const {
+  entry,
+  loading = 'lazy',
+  headingLevel: Heading = 'h3',
+  class: className,
+}: Props = Astro.props;
 const { title, summary, stack, cover, coverAlt, status, timeframe } = entry.data;
 
 // Only the title is a real link; the ::after overlay below makes the whole card
@@ -50,14 +61,14 @@ const remaining = stack.length - shown.length;
     </div>
 
     <div class="flex flex-col gap-2">
-      <h3 class="text-lg font-semibold leading-snug">
+      <Heading class="text-lg font-semibold leading-snug">
         <a
           href={href}
           class="transition-colors after:absolute after:inset-0 after:content-[''] group-hover:text-accent"
         >
           {title}
         </a>
-      </h3>
+      </Heading>
       <p class="text-sm leading-relaxed text-muted">{summary}</p>
     </div>
 
