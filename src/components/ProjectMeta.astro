@@ -1,0 +1,85 @@
+---
+import Icon from './Icon.astro';
+import TechPill from './TechPill.astro';
+import { formatTimeframe, statusLabel, type Project } from '../utils/projects';
+
+interface Props {
+  data: Project['data'];
+}
+
+const { data }: Props = Astro.props;
+const { role, timeframe, status, stack, repoUrl, liveUrl } = data;
+---
+
+<aside class="flex flex-col gap-8 rounded-xl border border-border-subtle bg-bg-raised p-6">
+  <div class="flex flex-col gap-5">
+    <div>
+      <h2 class="font-mono text-2xs uppercase tracking-[0.2em] text-faint">Role</h2>
+      <p class="mt-1.5 text-sm text-content">{role}</p>
+    </div>
+
+    <div>
+      <h2 class="font-mono text-2xs uppercase tracking-[0.2em] text-faint">Timeframe</h2>
+      <p class="mt-1.5 text-sm text-content">{formatTimeframe(timeframe)}</p>
+    </div>
+
+    <div>
+      <h2 class="font-mono text-2xs uppercase tracking-[0.2em] text-faint">Status</h2>
+      {/* Text label, not a coloured dot — status must not rely on colour alone. */}
+      <p class="mt-1.5 text-sm text-content">{statusLabel(status)}</p>
+    </div>
+  </div>
+
+  <div>
+    <h2 class="font-mono text-2xs uppercase tracking-[0.2em] text-faint">Stack</h2>
+    <ul class="mt-2.5 flex flex-wrap gap-1.5">
+      {stack.map((tech) => <TechPill as="li" label={tech} size="sm" />)}
+    </ul>
+  </div>
+
+  {
+    (repoUrl || liveUrl) && (
+      <div>
+        <h2 class="font-mono text-2xs uppercase tracking-[0.2em] text-faint">Links</h2>
+        <ul class="mt-2.5 flex flex-col gap-2">
+          {liveUrl && (
+            <li>
+              <a
+                href={liveUrl}
+                target="_blank"
+                rel="noopener noreferrer"
+                class="group inline-flex items-center gap-2 text-sm text-accent transition-colors hover:text-accent-hover"
+              >
+                Live site
+                <Icon
+                  name="arrow-up-right"
+                  size={14}
+                  class="transition-transform duration-200 group-hover:translate-x-0.5 group-hover:-translate-y-0.5"
+                />
+                <span class="sr-only">(opens in a new tab)</span>
+              </a>
+            </li>
+          )}
+          {repoUrl && (
+            <li>
+              <a
+                href={repoUrl}
+                target="_blank"
+                rel="noopener noreferrer"
+                class="group inline-flex items-center gap-2 text-sm text-accent transition-colors hover:text-accent-hover"
+              >
+                Source code
+                <Icon
+                  name="arrow-up-right"
+                  size={14}
+                  class="transition-transform duration-200 group-hover:translate-x-0.5 group-hover:-translate-y-0.5"
+                />
+                <span class="sr-only">(opens in a new tab)</span>
+              </a>
+            </li>
+          )}
+        </ul>
+      </div>
+    )
+  }
+</aside>

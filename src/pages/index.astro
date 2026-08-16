@@ -1,0 +1,88 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import Hero from '../components/Hero.astro';
+import SectionHeading from '../components/SectionHeading.astro';
+import ProjectCard from '../components/ProjectCard.astro';
+import Reveal from '../components/Reveal.astro';
+import Button from '../components/Button.astro';
+import Icon from '../components/Icon.astro';
+import JsonLd from '../components/JsonLd.astro';
+import { getPublishedProjects } from '../utils/projects';
+import { SITE_TITLE, SITE_DESCRIPTION, AUTHOR, SOCIAL_LINKS } from '../consts';
+
+const featured = (await getPublishedProjects())
+  .filter((p) => p.data.featured)
+  .slice(0, 3);
+
+const site = Astro.site!;
+
+const personSchema = {
+  '@context': 'https://schema.org',
+  '@type': 'Person',
+  name: AUTHOR.name,
+  url: site.href,
+  jobTitle: AUTHOR.jobTitle,
+  email: `mailto:${AUTHOR.email}`,
+  sameAs: SOCIAL_LINKS.filter((l) => l.href.startsWith('http')).map((l) => l.href),
+};
+---
+
+<BaseLayout title={SITE_TITLE} description={SITE_DESCRIPTION}>
+  <JsonLd schema={personSchema} slot="head" />
+
+  <Hero />
+
+  {
+    featured.length > 0 && (
+      <section class="mx-auto max-w-page px-6 py-20 sm:py-28">
+        <SectionHeading
+          eyebrow="Selected work"
+          title="Featured projects"
+          href="/projects/"
+          linkLabel="All projects"
+        />
+
+        <ul class="mt-10 grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
+          {featured.map((entry, i) => (
+            <Reveal as="li" delay={i * 80} class="flex">
+              <ProjectCard entry={entry} class="w-full" />
+            </Reveal>
+          ))}
+        </ul>
+      </section>
+    )
+  }
+
+  <section class="border-t border-border-subtle">
+    <div class="mx-auto max-w-page px-6 py-20 sm:py-28">
+      <Reveal>
+        <SectionHeading eyebrow="Background" title="A bit about me" />
+
+        <div class="mt-8 max-w-prose space-y-5 text-lg leading-relaxed text-muted">
+          {/* TODO: replace with two short paragraphs in your own voice. */}
+          <p>
+            I've spent the last several years building systems that other
+            engineers depend on — data pipelines, internal platforms, and the
+            unglamorous tooling that turns a fragile deploy into a boring one.
+          </p>
+          <p>
+            I care most about the parts of engineering that don't show up in a
+            demo: clear interfaces, honest error messages, and code the next
+            person can change without fear.
+          </p>
+        </div>
+
+        <div class="mt-10 flex flex-wrap gap-3">
+          <Button href="/about/" variant="ghost">
+            More about me
+            <Icon name="arrow-right" size={16} />
+          </Button>
+          <Button href="/contact/" variant="ghost">
+            Get in touch
+            <Icon name="arrow-right" size={16} />
+          </Button>
+        </div>
+      </Reveal>
+    </div>
+  </section>
+</BaseLayout>

@@ -1,0 +1,33 @@
+---
+/**
+ * Sets the theme before first paint, and marks that scripting is available.
+ *
+ * `is:inline` is required. Without it Astro bundles this as a deferred module,
+ * which runs after the first paint and produces a flash of the wrong theme.
+ * It must also be rendered as early as possible in <head>, before the stylesheet.
+ */
+---
+
+<script is:inline>
+  (() => {
+    // Gates the scroll-reveal hidden state in CSS. Set here, in a guaranteed
+    // synchronous inline script, so content is never hidden by a rule that
+    // nothing later un-hides.
+    document.documentElement.classList.add('js');
+
+    try {
+      const stored = localStorage.getItem('theme');
+      // Dark-first: only go light when explicitly chosen, or when the OS asks for it.
+      const theme =
+        stored === 'light' || stored === 'dark'
+          ? stored
+          : window.matchMedia('(prefers-color-scheme: light)').matches
+            ? 'light'
+            : 'dark';
+      document.documentElement.dataset.theme = theme;
+    } catch {
+      // localStorage can throw in private/blocked contexts — fall back to dark.
+      document.documentElement.dataset.theme = 'dark';
+    }
+  })();
+</script>

@@ -1,0 +1,86 @@
+---
+import ThemeScript from './ThemeScript.astro';
+import { SITE_TITLE, SITE_DESCRIPTION } from '../consts';
+import '../styles/global.css';
+
+interface Props {
+  title: string;
+  description?: string;
+  /** Absolute path or full URL to the social card image. */
+  image?: string;
+  type?: 'website' | 'article';
+  noindex?: boolean;
+  publishedTime?: Date;
+  modifiedTime?: Date;
+}
+
+const {
+  title,
+  description = SITE_DESCRIPTION,
+  image = '/og-default.png',
+  type = 'website',
+  noindex = false,
+  publishedTime,
+  modifiedTime,
+} = Astro.props;
+
+// Astro.site is guaranteed by the `site` config value.
+const canonical = new URL(Astro.url.pathname, Astro.site);
+const socialImage = new URL(image, Astro.site);
+
+// The home page shows the bare name; every other page gets a suffix.
+const fullTitle = title === SITE_TITLE ? title : `${title} — ${SITE_TITLE}`;
+---
+
+{/* Theme must resolve before the stylesheet to avoid a flash. */}
+<ThemeScript />
+
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<meta name="generator" content={Astro.generator} />
+
+<title>{fullTitle}</title>
+<meta name="description" content={description} />
+<link rel="canonical" href={canonical} />
+
+{noindex && <meta name="robots" content="noindex, nofollow" />}
+
+{/* Browser chrome colour per theme, matching --t-bg in global.css */}
+<meta name="color-scheme" content="dark light" />
+<meta name="theme-color" content="#f7f7f8" media="(prefers-color-scheme: light)" />
+<meta name="theme-color" content="#1c1d21" media="(prefers-color-scheme: dark)" />
+
+{/* Open Graph */}
+<meta property="og:type" content={type} />
+<meta property="og:title" content={fullTitle} />
+<meta property="og:description" content={description} />
+<meta property="og:url" content={canonical} />
+<meta property="og:image" content={socialImage} />
+<meta property="og:image:alt" content={`${SITE_TITLE} — ${description}`} />
+<meta property="og:site_name" content={SITE_TITLE} />
+{publishedTime && <meta property="article:published_time" content={publishedTime.toISOString()} />}
+{modifiedTime && <meta property="article:modified_time" content={modifiedTime.toISOString()} />}
+
+{/* Twitter / X */}
+<meta name="twitter:card" content="summary_large_image" />
+<meta name="twitter:title" content={fullTitle} />
+<meta name="twitter:description" content={description} />
+<meta name="twitter:image" content={socialImage} />
+
+{/* Icons */}
+<link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+<link rel="icon" href="/favicon.ico" sizes="32x32" />
+<link rel="apple-touch-icon" href="/apple-touch-icon.png" />
+<link rel="manifest" href="/site.webmanifest" />
+
+<link rel="alternate" type="application/rss+xml" title={SITE_TITLE} href={new URL('rss.xml', Astro.site)} />
+
+{/* Self-hosted fonts (see @font-face in global.css). Only the body face is
+    preloaded — mono appears in smaller doses and can afford to swap in. */}
+<link
+  rel="preload"
+  href="/fonts/inter-latin-var.woff2"
+  as="font"
+  type="font/woff2"
+  crossorigin
+/>

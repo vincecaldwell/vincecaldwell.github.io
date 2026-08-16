@@ -1,0 +1,56 @@
+---
+import PageLayout from '../../layouts/PageLayout.astro';
+import FormattedDate from '../../components/FormattedDate.astro';
+import TechPill from '../../components/TechPill.astro';
+import { getPublishedPosts } from '../../utils/posts';
+
+const posts = await getPublishedPosts();
+---
+
+<PageLayout
+  title="Writing"
+  eyebrow="Notes"
+  heading="Writing"
+  lede="Occasional notes on things I've built, broken, or had to figure out the hard way."
+  description="Technical writing and notes by Vince Caldwell."
+  narrow
+>
+  {
+    posts.length === 0 ? (
+      <p class="text-muted">
+        Nothing published yet. Add a Markdown file to
+        <code class="font-mono text-sm text-accent">src/content/posts/</code>
+        and set <code class="font-mono text-sm text-accent">draft: false</code>.
+      </p>
+    ) : (
+      <ul class="flex flex-col divide-y divide-border-subtle">
+        {posts.map((post) => (
+          <li>
+            <a
+              href={`/blog/${post.id}/`}
+              class="group flex flex-col gap-2 py-7 transition-colors"
+            >
+              <FormattedDate
+                date={post.data.pubDate}
+                class="font-mono text-2xs uppercase tracking-widest text-faint"
+              />
+              <h2 class="text-lg font-semibold transition-colors group-hover:text-accent">
+                {post.data.title}
+              </h2>
+              <p class="text-sm leading-relaxed text-muted">
+                {post.data.description}
+              </p>
+              {post.data.tags.length > 0 && (
+                <ul class="mt-1 flex flex-wrap gap-1.5">
+                  {post.data.tags.map((tag) => (
+                    <TechPill as="li" label={tag} size="sm" />
+                  ))}
+                </ul>
+              )}
+            </a>
+          </li>
+        ))}
+      </ul>
+    )
+  }
+</PageLayout>

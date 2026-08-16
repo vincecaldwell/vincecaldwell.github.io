@@ -1,0 +1,84 @@
+# Single source of truth for BOTH the web resume (/resume/) and the generated
+# PDF (/vince-caldwell-resume.pdf). Edit here only — never edit a PDF by hand.
+#
+# The `file()` loader needs a top-level keyed object, so everything hangs off
+# one `main` entry. Validated by the `resume` collection in src/content.config.ts,
+# so a typo fails the build rather than silently rendering an empty section.
+#
+# TODO: replace all placeholder content below with your real history.
+
+main:
+  summary: >-
+    TODO: three or four sentences. Lead with what you build and the scale you
+    build it at, then the domains you know well, then what you are looking for.
+    Recruiters read this paragraph and little else, so make it concrete —
+    "distributed data systems handling millions of events per day" beats
+    "passionate about technology".
+
+  experience:
+    - role: Senior Software Engineer
+      org: 'TODO: Company Name'
+      location: 'TODO: City, State (or Remote)'
+      start: '2023'
+      end: null # null renders as "Present"
+      tags:
+        - TypeScript
+        - Go
+        - AWS
+      bullets:
+        - >-
+          TODO: Lead with impact, not responsibility. "Cut p99 checkout latency
+          from 1.8s to 240ms by replacing N+1 queries with a batched loader"
+          beats "responsible for backend performance".
+        - >-
+          TODO: One bullet showing scope beyond writing code — a design others
+          adopted, a migration you led, an on-call burden you reduced.
+        - >-
+          TODO: One bullet showing you raise the people around you — mentoring,
+          review culture, documentation others actually use.
+
+    - role: Software Engineer
+      org: 'TODO: Previous Company'
+      location: 'TODO: City, State'
+      start: '2020'
+      end: '2023'
+      tags:
+        - Python
+        - PostgreSQL
+      bullets:
+        - 'TODO: Impact-first bullet with a number in it.'
+        - 'TODO: Second bullet.'
+
+  education:
+    - credential: 'TODO: B.S. in Computer Science'
+      org: 'TODO: University Name'
+      location: 'TODO: City, State'
+      end: '2020'
+      detail: 'TODO: optional — honors, relevant coursework, or delete this line.'
+
+  skills:
+    - label: Languages
+      items:
+        - TypeScript
+        - Go
+        - Python
+        - SQL
+    - label: Backend
+      items:
+        - Node.js
+        - PostgreSQL
+        - Redis
+        - Kafka
+    - label: Frontend
+      items:
+        - React
+        - Astro
+        - Tailwind CSS
+    - label: Infrastructure
+      items:
+        - AWS
+        - Docker
+        - Terraform
+        - GitHub Actions
+
+  certifications: []

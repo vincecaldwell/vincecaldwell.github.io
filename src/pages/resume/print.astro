@@ -1,0 +1,155 @@
+---
+import PrintLayout from '../../layouts/PrintLayout.astro';
+import { getResume } from '../../utils/resume';
+import { AUTHOR, SOCIAL_LINKS } from '../../consts';
+
+const resume = await getResume();
+
+// Shown as plain text in the header rather than as links — a printed page
+// cannot be clicked, and the bare URL is what someone would retype.
+const contactLine = [
+  AUTHOR.email,
+  AUTHOR.location,
+  ...SOCIAL_LINKS.filter((l) => l.href.startsWith('http')).map((l) =>
+    l.href.replace(/^https?:\/\/(www\.)?/, ''),
+  ),
+].filter(Boolean);
+
+const period = (start: string, end?: string | null) =>
+  end ? `${start} — ${end}` : `${start} — Present`;
+---
+
+<PrintLayout title={`${AUTHOR.name} — Resume`}>
+  <header class="border-b border-[#d8d9de] pb-3">
+    <h1 class="text-[20pt] font-bold leading-tight tracking-tight">
+      {AUTHOR.name}
+    </h1>
+    <p class="mt-0.5 text-[11pt] text-[#3f4147]">{AUTHOR.jobTitle}</p>
+    <p class="mt-1.5 text-[8.5pt] leading-relaxed text-[#5a5d66]">
+      {contactLine.join('  ·  ')}
+    </p>
+  </header>
+
+  <section class="mt-4">
+    <p class="text-[9.5pt] leading-snug text-[#3f4147]">{resume.summary}</p>
+  </section>
+
+  <section class="mt-5">
+    <h2
+      class="border-b border-[#d8d9de] pb-1 text-[8.5pt] font-semibold uppercase tracking-[0.14em] text-[#5a5d66]"
+    >
+      Experience
+    </h2>
+
+    <div class="mt-3 flex flex-col gap-4">
+      {
+        resume.experience.map((job) => (
+          <article class="avoid-break">
+            <div class="flex items-baseline justify-between gap-4">
+              {/* Separator lives inside the span: Astro 7 compresses whitespace
+                  between inline elements, so a bare space here would vanish. */}
+              <h3 class="text-[10.5pt] font-semibold">
+                {job.role}
+                <span class="font-normal text-[#3f4147]">{` — ${job.org}`}</span>
+              </h3>
+              <p class="shrink-0 text-[8.5pt] text-[#5a5d66]">
+                {period(job.start, job.end)}
+              </p>
+            </div>
+
+            {job.location && (
+              <p class="text-[8.5pt] text-[#5a5d66]">{job.location}</p>
+            )}
+
+            <ul class="mt-1.5 flex flex-col gap-1">
+              {job.bullets.map((bullet) => (
+                <li class="relative pl-3 text-[9.5pt] leading-snug text-[#3f4147] before:absolute before:left-0 before:content-['–']">
+                  {bullet}
+                </li>
+              ))}
+            </ul>
+
+            {job.tags.length > 0 && (
+              <p class="mt-1.5 text-[8.5pt] text-[#5a5d66]">
+                {job.tags.join(' · ')}
+              </p>
+            )}
+          </article>
+        ))
+      }
+    </div>
+  </section>
+
+  {
+    resume.skills.length > 0 && (
+      <section class="avoid-break mt-5">
+        <h2 class="border-b border-[#d8d9de] pb-1 text-[8.5pt] font-semibold uppercase tracking-[0.14em] text-[#5a5d66]">
+          Skills
+        </h2>
+
+        <dl class="mt-2.5 flex flex-col gap-1.5">
+          {resume.skills.map((group) => (
+            <div class="flex gap-3 text-[9.5pt]">
+              <dt class="w-24 shrink-0 font-semibold text-[#16171a]">
+                {group.label}
+              </dt>
+              <dd class="text-[#3f4147]">{group.items.join(' · ')}</dd>
+            </div>
+          ))}
+        </dl>
+      </section>
+    )
+  }
+
+  {
+    resume.education.length > 0 && (
+      <section class="avoid-break mt-5">
+        <h2 class="border-b border-[#d8d9de] pb-1 text-[8.5pt] font-semibold uppercase tracking-[0.14em] text-[#5a5d66]">
+          Education
+        </h2>
+
+        <div class="mt-2.5 flex flex-col gap-2.5">
+          {resume.education.map((item) => (
+            <article>
+              <div class="flex items-baseline justify-between gap-4">
+                <h3 class="text-[10pt] font-semibold">
+                  {item.credential}
+                  <span class="font-normal text-[#3f4147]">
+                    {` — ${item.org}`}
+                  </span>
+                </h3>
+                {item.end && (
+                  <p class="shrink-0 text-[8.5pt] text-[#5a5d66]">{item.end}</p>
+                )}
+              </div>
+              {item.detail && (
+                <p class="text-[9pt] text-[#3f4147]">{item.detail}</p>
+              )}
+            </article>
+          ))}
+        </div>
+      </section>
+    )
+  }
+
+  {
+    resume.certifications.length > 0 && (
+      <section class="avoid-break mt-5">
+        <h2 class="border-b border-[#d8d9de] pb-1 text-[8.5pt] font-semibold uppercase tracking-[0.14em] text-[#5a5d66]">
+          Certifications
+        </h2>
+
+        <ul class="mt-2.5 flex flex-col gap-1">
+          {resume.certifications.map((cert) => (
+            <li class="text-[9.5pt] text-[#3f4147]">
+              <span class="font-semibold text-[#16171a]">{cert.name}</span>
+              {' — '}
+              {cert.issuer}
+              {cert.year && ` (${cert.year})`}
+            </li>
+          ))}
+        </ul>
+      </section>
+    )
+  }
+</PrintLayout>

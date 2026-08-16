@@ -1,0 +1,85 @@
+---
+import PageLayout from '../layouts/PageLayout.astro';
+import Prose from '../components/Prose.astro';
+import Button from '../components/Button.astro';
+import Icon from '../components/Icon.astro';
+import JsonLd from '../components/JsonLd.astro';
+import { AUTHOR, SOCIAL_LINKS, RESUME_PDF_PATH } from '../consts';
+
+const site = Astro.site!;
+
+const personSchema = {
+  '@context': 'https://schema.org',
+  '@type': 'Person',
+  name: AUTHOR.name,
+  url: new URL('/about/', site).href,
+  jobTitle: AUTHOR.jobTitle,
+  email: `mailto:${AUTHOR.email}`,
+  sameAs: SOCIAL_LINKS.filter((l) => l.href.startsWith('http')).map((l) => l.href),
+};
+---
+
+<PageLayout
+  title="About"
+  eyebrow="Background"
+  heading="About me"
+  lede="Where I've been, what I like building, and how I work."
+  description="Background, engineering philosophy and working style — Vince Caldwell, senior software engineer."
+  narrow
+>
+  <JsonLd schema={personSchema} slot="head" />
+
+  <Prose>
+    {/* TODO: Replace everything below with your own story. The structure is a
+        suggestion, not a requirement — keep what serves you. */}
+    <p>
+      TODO: Open with the thing that makes you specifically worth hiring. Not
+      "passionate developer" — something concrete. What kind of problem do you
+      reach for? What have you done that most engineers at your level haven't?
+    </p>
+
+    <h2>How I got here</h2>
+    <p>
+      TODO: The short version of your path. Two or three sentences is plenty. If
+      you came in from another field, say so — it's usually an asset, not
+      something to explain away.
+    </p>
+
+    <h2>What I'm good at</h2>
+    <p>
+      TODO: Be specific and be honest. Name the systems you've built and the
+      scale you've run them at. Claims that can be checked read as more credible
+      than claims that can't.
+    </p>
+
+    <h2>How I work</h2>
+    <p>
+      TODO: Your engineering values, expressed as behaviour rather than
+      adjectives. "I write the migration rollback before the migration" says more
+      than "detail-oriented".
+    </p>
+
+    <h2>Outside of work</h2>
+    <p>
+      TODO: Optional, and worth including. This is where the site stops sounding
+      like a resume. One or two genuine interests, briefly.
+    </p>
+
+    <h2>What I'm looking for</h2>
+    <p>
+      TODO: If you're open to opportunities, say what kind. If you're not, say
+      that instead — it saves everyone time.
+    </p>
+  </Prose>
+
+  <div class="mt-12 flex flex-wrap gap-3">
+    <Button href="/resume/">
+      Read my resume
+      <Icon name="arrow-right" size={16} />
+    </Button>
+    <Button href={RESUME_PDF_PATH} variant="ghost" download>
+      Download PDF
+      <Icon name="download" size={16} />
+    </Button>
+  </div>
+</PageLayout>

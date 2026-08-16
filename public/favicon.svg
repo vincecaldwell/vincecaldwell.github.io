@@ -1,0 +1,25 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" role="img" aria-label="VC">
+  <style>
+    /* Theme-aware: the tab icon follows the browser's colour scheme. */
+    :root { --bg: #16171a; --fg: #4dd6e0; }
+    @media (prefers-color-scheme: light) {
+      :root { --bg: #f7f7f8; --fg: #067c8c; }
+    }
+  </style>
+  <rect width="64" height="64" rx="14" fill="var(--bg)" />
+  <path
+    d="M16 20 L26 44 L36 20"
+    fill="none"
+    stroke="var(--fg)"
+    stroke-width="6"
+    stroke-linecap="round"
+    stroke-linejoin="round"
+  />
+  <path
+    d="M52 26 a10 10 0 1 0 0 12"
+    fill="none"
+    stroke="var(--fg)"
+    stroke-width="6"
+    stroke-linecap="round"
+  />
+</svg>

@@ -1,0 +1,40 @@
+---
+import PageLayout from '../../layouts/PageLayout.astro';
+import ProjectCard from '../../components/ProjectCard.astro';
+import Reveal from '../../components/Reveal.astro';
+import { getPublishedProjects } from '../../utils/projects';
+
+const projects = await getPublishedProjects();
+---
+
+<PageLayout
+  title="Projects"
+  eyebrow="Selected work"
+  lede="Things I've designed, built and shipped. Each one covers the problem, the approach, and what actually changed once it landed."
+  description="Selected engineering projects by Vince Caldwell — architecture, decisions and outcomes."
+>
+  {
+    projects.length === 0 ? (
+      <p class="text-muted">
+        No projects published yet. Add a Markdown file to
+        <code class="font-mono text-sm text-accent">src/content/projects/</code>
+        to get started.
+      </p>
+    ) : (
+      <ul class="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
+        {projects.map((entry, i) => (
+          <Reveal as="li" delay={Math.min(i, 5) * 60} class="flex">
+            {/* h2: these sit directly under the page h1, with no section
+                heading between. */}
+            <ProjectCard
+              entry={entry}
+              loading={i === 0 ? 'eager' : 'lazy'}
+              headingLevel="h2"
+              class="w-full"
+            />
+          </Reveal>
+        ))}
+      </ul>
+    )
+  }
+</PageLayout>
