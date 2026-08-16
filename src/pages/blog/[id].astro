@@ -1,0 +1,131 @@
+---
+import type { GetStaticPaths } from 'astro';
+import { Image } from 'astro:assets';
+import { render } from 'astro:content';
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import Prose from '../../components/Prose.astro';
+import FormattedDate from '../../components/FormattedDate.astro';
+import TechPill from '../../components/TechPill.astro';
+import Icon from '../../components/Icon.astro';
+import { getPublishedPosts, type Post } from '../../utils/posts';
+import { getPublishedProjects } from '../../utils/projects';
+
+export const getStaticPaths: GetStaticPaths = async () => {
+  const posts = await getPublishedPosts();
+  return posts.map((entry) => ({ params: { id: entry.id }, props: { entry } }));
+};
+
+interface Props {
+  entry: Post;
+}
+
+const { entry } = Astro.props as Props;
+const { Content } = await render(entry);
+const { title, description, pubDate, updatedDate, tags, heroImage, heroImageAlt } =
+  entry.data;
+
+// relatedProjects holds validated references; resolve them to real entries.
+const allProjects = await getPublishedProjects();
+const related = allProjects.filter((p) =>
+  entry.data.relatedProjects.some((ref) => ref.id === p.id),
+);
+---
+
+<BaseLayout
+  title={title}
+  description={description}
+  type="article"
+  publishedTime={pubDate}
+  modifiedTime={updatedDate}
+>
+  <article class="mx-auto max-w-prose px-6 py-16 sm:py-24">
+    <a
+      href="/blog/"
+      class="group inline-flex items-center gap-2 font-mono text-xs uppercase tracking-widest text-faint transition-colors hover:text-accent"
+    >
+      <Icon
+        name="arrow-right"
+        size={14}
+        class="rotate-180 transition-transform duration-200 group-hover:-translate-x-0.5"
+      />
+      All writing
+    </a>
+
+    <header class="mt-8">
+      <div
+        class="flex flex-wrap items-center gap-x-3 gap-y-1 font-mono text-2xs uppercase tracking-widest text-faint"
+      >
+        <FormattedDate date={pubDate} />
+        {
+          updatedDate && (
+            <>
+              <span aria-hidden="true">&middot;</span>
+              <span>
+                Updated <FormattedDate date={updatedDate} />
+              </span>
+            </>
+          )
+        }
+      </div>
+
+      <h1 class="mt-4 text-4xl font-bold tracking-tight">{title}</h1>
+      <p class="mt-5 text-lg text-muted">{description}</p>
+
+      {
+        tags.length > 0 && (
+          <ul class="mt-6 flex flex-wrap gap-1.5">
+            {tags.map((tag) => (
+              <TechPill as="li" label={tag} size="sm" />
+            ))}
+          </ul>
+        )
+      }
+    </header>
+
+    {
+      heroImage && (
+        <div class="mt-10 overflow-hidden rounded-xl border border-border-subtle">
+          <Image
+            src={heroImage}
+            alt={heroImageAlt}
+            loading="eager"
+            width={1400}
+            height={788}
+            class="w-full"
+          />
+        </div>
+      )
+    }
+
+    <Prose class="mt-12">
+      <Content />
+    </Prose>
+
+    {
+      related.length > 0 && (
+        <aside class="mt-16 border-t border-border-subtle pt-8">
+          <h2 class="font-mono text-xs uppercase tracking-[0.2em] text-faint">
+            Related projects
+          </h2>
+          <ul class="mt-4 flex flex-col gap-2">
+            {related.map((project) => (
+              <li>
+                <a
+                  href={`/projects/${project.id}/`}
+                  class="group inline-flex items-center gap-2 text-accent transition-colors hover:text-accent-hover"
+                >
+                  {project.data.title}
+                  <Icon
+                    name="arrow-right"
+                    size={14}
+                    class="transition-transform duration-200 group-hover:translate-x-0.5"
+                  />
+                </a>
+              </li>
+            ))}
+          </ul>
+        </aside>
+      )
+    }
+  </article>
+</BaseLayout>
