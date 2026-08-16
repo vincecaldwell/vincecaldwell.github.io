@@ -3,19 +3,22 @@ name: Deploy to GitHub Pages
 on:
   push:
     branches: [main]
+  # Pull requests run the build job only — same verification, no deploy.
+  pull_request:
   # Lets the first run be retried after enabling Pages, with no empty commit.
   workflow_dispatch:
 
+# Deploy credentials are granted per-job, not here: a pull request build has no
+# business holding pages: write.
 permissions:
   contents: read
-  pages: write
-  id-token: write
 
 concurrency:
-  group: pages
-  # false, not true: cancelling mid-deploy would abort a publish already in
-  # flight. This is a deploy pipeline, so let a running one finish.
-  cancel-in-progress: false
+  # Per-ref, so pull request builds do not queue behind one another. main is a
+  # single ref, so deploys still serialise.
+  group: pages-${{ github.ref }}
+  # Never cancel a deploy mid-publish. Superseded PR builds are safe to drop.
+  cancel-in-progress: ${{ github.event_name == 'pull_request' }}
 
 jobs:
   build:
@@ -68,6 +71,8 @@ jobs:
           PDF_BASE_URL: http://localhost:4321
           PREVIEW_URL: http://localhost:4321
 
+      # Uploaded on pull requests too. It costs little, and it means a PR
+      # exercises the identical path a deploy takes rather than a near-copy.
       - name: Upload Pages artifact
         uses: actions/upload-pages-artifact@v3
         with:
@@ -75,7 +80,12 @@ jobs:
 
   deploy:
     needs: build
+    # Verification runs everywhere; publishing only from main.
+    if: github.event_name != 'pull_request'
     runs-on: ubuntu-latest
+    permissions:
+      pages: write
+      id-token: write
     environment:
       name: github-pages
       url: ${{ steps.deployment.outputs.page_url }}
