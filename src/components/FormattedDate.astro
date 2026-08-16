@@ -1,0 +1,23 @@
+---
+interface Props {
+  date: Date;
+  format?: 'month-year' | 'full';
+  class?: string;
+}
+
+const { date, format = 'full', class: className } = Astro.props;
+
+const OPTIONS: Record<string, Intl.DateTimeFormatOptions> = {
+  'month-year': { year: 'numeric', month: 'short' },
+  full: { year: 'numeric', month: 'short', day: 'numeric' },
+};
+
+// Fixed locale and UTC: the build machine's locale and timezone should not
+// change what visitors see.
+const formatted = new Intl.DateTimeFormat('en-US', {
+  ...OPTIONS[format],
+  timeZone: 'UTC',
+}).format(date);
+---
+
+<time datetime={date.toISOString()} class={className}>{formatted}</time>

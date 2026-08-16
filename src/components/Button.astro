@@ -1,0 +1,61 @@
+---
+/**
+ * Renders an <a> when `href` is set, otherwise a <button>. Keeps call-to-action
+ * styling in one place so primary/ghost variants stay consistent site-wide.
+ */
+interface Props {
+  href?: string;
+  type?: 'button' | 'submit';
+  variant?: 'primary' | 'ghost';
+  size?: 'sm' | 'md';
+  /** Adds target/rel and is announced to screen readers. */
+  external?: boolean;
+  download?: boolean;
+  class?: string;
+}
+
+const {
+  href,
+  type = 'button',
+  variant = 'primary',
+  size = 'md',
+  external = false,
+  download = false,
+  class: className,
+} = Astro.props;
+
+const base =
+  'inline-flex items-center gap-2 rounded-lg font-medium transition-[background-color,border-color,color,transform] duration-200 ease-out active:translate-y-px';
+
+const variants = {
+  primary: 'bg-accent text-on-accent hover:bg-accent-hover',
+  ghost:
+    'border border-border-strong text-content hover:border-accent hover:text-accent',
+};
+
+const sizes = {
+  sm: 'px-3 py-1.5 text-sm',
+  md: 'px-5 py-2.5 text-sm',
+};
+
+const classes = [base, variants[variant], sizes[size], className];
+---
+
+{
+  href ? (
+    <a
+      href={href}
+      class:list={classes}
+      download={download ? '' : undefined}
+      target={external ? '_blank' : undefined}
+      rel={external ? 'noopener noreferrer' : undefined}
+    >
+      <slot />
+      {external && <span class="sr-only">(opens in a new tab)</span>}
+    </a>
+  ) : (
+    <button type={type} class:list={classes}>
+      <slot />
+    </button>
+  )
+}

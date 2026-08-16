@@ -1,0 +1,36 @@
+---
+import Icon from './Icon.astro';
+import { SOCIAL_LINKS, SITE_TITLE } from '../consts';
+
+const year = new Date().getFullYear();
+---
+
+<footer class="border-t border-border-subtle">
+  <div
+    class="mx-auto flex max-w-page flex-col gap-6 px-6 py-10 sm:flex-row sm:items-center sm:justify-between"
+  >
+    <p class="font-mono text-xs text-faint">
+      &copy; {year} {SITE_TITLE}
+    </p>
+
+    <ul class="flex items-center gap-1">
+      {
+        SOCIAL_LINKS.map((link) => {
+          const isExternal = link.href.startsWith('http');
+          return (
+            <li>
+              <a
+                href={link.href}
+                class="inline-flex size-9 items-center justify-center rounded-lg text-muted transition-colors duration-200 hover:text-accent"
+                target={isExternal ? '_blank' : undefined}
+                rel={isExternal ? 'noopener noreferrer' : undefined}
+              >
+                <Icon name={link.icon} title={link.label} size={18} />
+              </a>
+            </li>
+          );
+        })
+      }
+    </ul>
+  </div>
+</footer>

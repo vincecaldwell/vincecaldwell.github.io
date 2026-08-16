@@ -1,0 +1,52 @@
+---
+import Icon from './Icon.astro';
+
+interface Props {
+  /** Small mono label above the heading. Decorative — not a heading level. */
+  eyebrow?: string;
+  title: string;
+  /** Optional "see all" style link on the right. */
+  href?: string;
+  linkLabel?: string;
+  as?: 'h2' | 'h3';
+  class?: string;
+}
+
+const {
+  eyebrow,
+  title,
+  href,
+  linkLabel = 'View all',
+  as: Tag = 'h2',
+  class: className,
+}: Props = Astro.props;
+---
+
+<div class:list={['flex items-end justify-between gap-6', className]}>
+  <div>
+    {
+      eyebrow && (
+        <p class="font-mono text-xs uppercase tracking-[0.2em] text-accent">
+          {eyebrow}
+        </p>
+      )
+    }
+    <Tag class="mt-2 text-2xl font-semibold text-content">{title}</Tag>
+  </div>
+
+  {
+    href && (
+      <a
+        href={href}
+        class="group inline-flex shrink-0 items-center gap-1.5 text-sm text-muted transition-colors hover:text-accent"
+      >
+        {linkLabel}
+        <Icon
+          name="arrow-right"
+          size={16}
+          class="transition-transform duration-200 group-hover:translate-x-0.5"
+        />
+      </a>
+    )
+  }
+</div>

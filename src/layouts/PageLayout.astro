@@ -1,0 +1,47 @@
+---
+import BaseLayout from './BaseLayout.astro';
+
+interface Props {
+  title: string;
+  description?: string;
+  image?: string;
+  type?: 'website' | 'article';
+  noindex?: boolean;
+  /** Page heading. Defaults to `title`; pass `false` to omit the header block. */
+  heading?: string | false;
+  eyebrow?: string;
+  lede?: string;
+  /** Narrow measure for text-heavy pages. */
+  narrow?: boolean;
+}
+
+const { heading, eyebrow, lede, narrow = false, ...head } = Astro.props;
+const pageHeading = heading === false ? null : (heading ?? head.title);
+---
+
+<BaseLayout {...head}>
+  <div
+    class:list={[
+      'mx-auto px-6 py-16 sm:py-24',
+      narrow ? 'max-w-prose' : 'max-w-page',
+    ]}
+  >
+    {
+      pageHeading && (
+        <header class="mb-12 sm:mb-16">
+          {eyebrow && (
+            <p class="font-mono text-xs uppercase tracking-[0.2em] text-accent">
+              {eyebrow}
+            </p>
+          )}
+          <h1 class="mt-3 text-4xl font-bold tracking-tight">{pageHeading}</h1>
+          {lede && (
+            <p class="mt-5 max-w-prose text-lg text-muted">{lede}</p>
+          )}
+        </header>
+      )
+    }
+
+    <slot />
+  </div>
+</BaseLayout>

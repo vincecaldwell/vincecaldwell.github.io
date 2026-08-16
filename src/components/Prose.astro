@@ -1,0 +1,148 @@
+---
+/**
+ * Typographic wrapper for rendered Markdown. Written as explicit child selectors
+ * rather than pulling in @tailwindcss/typography, so the rhythm matches the
+ * site's own type scale and theme tokens instead of a second, parallel system.
+ */
+interface Props {
+  class?: string;
+}
+
+const { class: className } = Astro.props;
+---
+
+<div class:list={['prose-content', className]}>
+  <slot />
+</div>
+
+<style>
+  .prose-content {
+    color: var(--t-text);
+    font-size: var(--text-base);
+    line-height: var(--text-base--line-height);
+  }
+
+  .prose-content > * + * {
+    margin-block-start: 1.25em;
+  }
+
+  .prose-content :global(h2) {
+    margin-block-start: 2.5em;
+    margin-block-end: 0.75em;
+    font-size: var(--text-xl);
+    line-height: var(--text-xl--line-height);
+    font-weight: 600;
+  }
+
+  .prose-content :global(h3) {
+    margin-block-start: 2em;
+    margin-block-end: 0.5em;
+    font-size: var(--text-lg);
+    line-height: var(--text-lg--line-height);
+    font-weight: 600;
+  }
+
+  .prose-content :global(a) {
+    color: var(--t-accent);
+    text-decoration: underline;
+    text-underline-offset: 3px;
+    text-decoration-thickness: 1px;
+    transition: color 0.2s;
+  }
+
+  .prose-content :global(a:hover) {
+    color: var(--t-accent-hover);
+  }
+
+  .prose-content :global(ul),
+  .prose-content :global(ol) {
+    padding-inline-start: 1.5em;
+  }
+
+  .prose-content :global(ul) {
+    list-style: disc;
+  }
+
+  .prose-content :global(ol) {
+    list-style: decimal;
+  }
+
+  .prose-content :global(li + li) {
+    margin-block-start: 0.5em;
+  }
+
+  .prose-content :global(li::marker) {
+    color: var(--t-text-faint);
+  }
+
+  .prose-content :global(strong) {
+    font-weight: 600;
+    color: var(--t-text);
+  }
+
+  .prose-content :global(blockquote) {
+    border-inline-start: 2px solid var(--t-accent);
+    padding-inline-start: 1.25em;
+    color: var(--t-text-muted);
+    font-style: italic;
+  }
+
+  .prose-content :global(code) {
+    font-family: var(--font-mono);
+    font-size: 0.875em;
+    background: var(--t-bg-sunken);
+    border: 1px solid var(--t-border);
+    border-radius: 4px;
+    padding: 0.125em 0.375em;
+  }
+
+  /* Code blocks scroll inside their own box so the page never scrolls sideways. */
+  .prose-content :global(pre) {
+    overflow-x: auto;
+    border-radius: 8px;
+    border: 1px solid var(--t-border);
+    padding: 1rem 1.25rem;
+    font-size: var(--text-sm);
+    line-height: 1.6;
+  }
+
+  .prose-content :global(pre code) {
+    background: none;
+    border: none;
+    padding: 0;
+    font-size: inherit;
+  }
+
+  .prose-content :global(img) {
+    border-radius: 8px;
+    max-width: 100%;
+    height: auto;
+  }
+
+  .prose-content :global(hr) {
+    border: 0;
+    border-top: 1px solid var(--t-border);
+    margin-block: 3em;
+  }
+
+  /* Tables scroll rather than forcing the page wider. */
+  .prose-content :global(table) {
+    display: block;
+    overflow-x: auto;
+    width: 100%;
+    border-collapse: collapse;
+    font-size: var(--text-sm);
+  }
+
+  .prose-content :global(th),
+  .prose-content :global(td) {
+    border: 1px solid var(--t-border);
+    padding: 0.5em 0.75em;
+    text-align: start;
+  }
+
+  .prose-content :global(th) {
+    background: var(--t-bg-sunken);
+    font-weight: 600;
+  }
+</style>

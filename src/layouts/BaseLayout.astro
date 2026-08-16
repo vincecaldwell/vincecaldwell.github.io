@@ -1,5 +1,7 @@
 ---
 import BaseHead from '../components/BaseHead.astro';
+import Nav from '../components/Nav.astro';
+import Footer from '../components/Footer.astro';
 
 interface Props {
   title: string;
@@ -20,23 +22,30 @@ const { bodyClass, ...head } = Astro.props;
   <head>
     <BaseHead {...head} />
   </head>
-  <body class:list={['min-h-dvh bg-bg text-content antialiased flex flex-col', bodyClass]}>
-    <a href="#main-content" class="sr-only-focusable z-50 top-4 left-4 rounded-md bg-accent px-4 py-2 font-medium text-on-accent">
+  <body
+    class:list={[
+      'flex min-h-dvh flex-col bg-bg text-content antialiased',
+      bodyClass,
+    ]}
+  >
+    <a
+      href="#main-content"
+      class="sr-only-focusable left-4 top-4 z-50 rounded-md bg-accent px-4 py-2 font-medium text-on-accent"
+    >
       Skip to content
     </a>
 
-    <slot name="header" />
+    <Nav currentPath={Astro.url.pathname} />
 
     <main id="main-content" class="flex-1">
       <slot />
     </main>
 
-    <slot name="footer" />
+    <Footer />
 
     <script>
-      // Scroll reveal. Elements opt in with `data-reveal`; CSS hides them until
-      // `.is-visible` lands. If reduced motion is requested we reveal everything
-      // immediately rather than animating.
+      // Scroll reveal. Elements opt in with `data-reveal`; CSS keeps them hidden
+      // until `.is-visible` lands. Reduced motion reveals everything at once.
       const items = document.querySelectorAll<HTMLElement>('[data-reveal]');
 
       if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) {

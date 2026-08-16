@@ -1,0 +1,31 @@
+---
+/**
+ * Opts its children into the scroll-reveal animation wired up in BaseLayout.
+ * Falls back to visible when JS is unavailable or reduced motion is requested.
+ */
+interface Props {
+  /** Stagger, in ms. Applied as a transition-delay. */
+  delay?: number;
+  as?: 'div' | 'section' | 'article' | 'li';
+  class?: string;
+}
+
+const { delay = 0, as: Tag = 'div', class: className }: Props = Astro.props;
+---
+
+<Tag
+  data-reveal
+  class={className}
+  style={delay ? `transition-delay:${delay}ms` : undefined}
+>
+  <slot />
+</Tag>
+
+<noscript>
+  <style>
+    [data-reveal] {
+      opacity: 1 !important;
+      transform: none !important;
+    }
+  </style>
+</noscript>

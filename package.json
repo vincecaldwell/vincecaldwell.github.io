@@ -15,7 +15,8 @@
     "sync": "astro sync",
     "resume:pdf": "node scripts/make-resume-pdf.mjs",
     "astro": "astro",
-    "fonts:vendor": "node scripts/vendor-fonts.mjs"
+    "fonts:vendor": "node scripts/vendor-fonts.mjs",
+    "screenshot": "node scripts/screenshot.mjs"
   },
   "dependencies": {
     "@astrojs/mdx": "^7.0.5",

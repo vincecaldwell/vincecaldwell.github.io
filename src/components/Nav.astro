@@ -1,0 +1,83 @@
+---
+import ThemeToggle from './ThemeToggle.astro';
+import { NAV_ITEMS, SITE_TITLE } from '../consts';
+
+interface Props {
+  currentPath: string;
+}
+
+const { currentPath } = Astro.props;
+
+/** Marks /projects/ active on /projects/some-project/ too. */
+const isActive = (href: string) =>
+  href === '/' ? currentPath === '/' : currentPath.startsWith(href);
+---
+
+<header
+  class="sticky top-0 z-40 border-b border-border-subtle bg-bg/85 backdrop-blur-md"
+>
+  <nav
+    class="mx-auto flex max-w-page items-center justify-between gap-4 px-6 py-4"
+    aria-label="Main"
+  >
+    <a
+      href="/"
+      class="font-mono text-sm font-semibold tracking-tight text-content transition-colors hover:text-accent"
+      aria-current={currentPath === '/' ? 'page' : undefined}
+    >
+      {SITE_TITLE}
+    </a>
+
+    {/* gap, not whitespace: compressHTML defaults to 'jsx' in Astro 7 and strips
+        whitespace between inline elements. */}
+    <div class="flex items-center gap-1 sm:gap-2">
+      <ul class="hidden items-center gap-1 sm:flex">
+        {
+          NAV_ITEMS.map((item) => (
+            <li>
+              <a
+                href={item.href}
+                class:list={[
+                  'rounded-md px-3 py-2 text-sm transition-colors duration-200',
+                  isActive(item.href)
+                    ? 'text-accent'
+                    : 'text-muted hover:text-content',
+                ]}
+                aria-current={isActive(item.href) ? 'page' : undefined}
+              >
+                {item.label}
+              </a>
+            </li>
+          ))
+        }
+      </ul>
+
+      <ThemeToggle />
+    </div>
+  </nav>
+
+  {/* Small screens: the same links as a wrapped row rather than a JS drawer.
+      Five items fit fine, and it keeps the header script-free. */}
+  <ul
+    class="flex flex-wrap items-center gap-x-1 gap-y-1 border-t border-border-subtle px-4 pb-3 pt-2 sm:hidden"
+  >
+    {
+      NAV_ITEMS.map((item) => (
+        <li>
+          <a
+            href={item.href}
+            class:list={[
+              'rounded-md px-3 py-1.5 text-sm transition-colors',
+              isActive(item.href)
+                ? 'text-accent'
+                : 'text-muted hover:text-content',
+            ]}
+            aria-current={isActive(item.href) ? 'page' : undefined}
+          >
+            {item.label}
+          </a>
+        </li>
+      ))
+    }
+  </ul>
+</header>
