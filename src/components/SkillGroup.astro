@@ -1,0 +1,32 @@
+---
+import TechPill from './TechPill.astro';
+
+interface Props {
+  label: string;
+  items: string[];
+  /** Renders as plain comma-separated text, which reads better in print. */
+  plain?: boolean;
+}
+
+const { label, items, plain = false }: Props = Astro.props;
+---
+
+<div class="flex flex-col gap-2 sm:flex-row sm:gap-6">
+  <h3
+    class="shrink-0 font-mono text-2xs uppercase tracking-widest text-faint sm:w-32 sm:pt-1"
+  >
+    {label}
+  </h3>
+
+  {
+    plain ? (
+      <p class="text-sm text-muted">{items.join(' · ')}</p>
+    ) : (
+      <ul class="flex flex-wrap gap-1.5">
+        {items.map((item) => (
+          <TechPill as="li" label={item} size="sm" />
+        ))}
+      </ul>
+    )
+  }
+</div>

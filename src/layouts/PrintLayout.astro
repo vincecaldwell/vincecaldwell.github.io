@@ -1,0 +1,81 @@
+---
+/**
+ * Bare shell for the PDF source page. No nav, no footer, no theme toggle, and
+ * no theme switching at all — the palette is forced light because this is
+ * printed onto white paper.
+ *
+ * Deliberately does not extend BaseLayout: inheriting site chrome and then
+ * hiding it in print CSS is more fragile than simply not rendering it.
+ */
+import '../styles/global.css';
+
+interface Props {
+  title: string;
+}
+
+const { title } = Astro.props;
+---
+
+<!doctype html>
+<html lang="en" data-theme="light">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>{title}</title>
+    {/* This page exists only as the PDF source; the real page is /resume/. */}
+    <meta name="robots" content="noindex, nofollow" />
+    <link rel="canonical" href={new URL('/resume/', Astro.site)} />
+    <link
+      rel="preload"
+      href="/fonts/inter-latin-var.woff2"
+      as="font"
+      type="font/woff2"
+      crossorigin
+    />
+  </head>
+  <body class="print-body">
+    <slot />
+
+    <style is:global>
+      @page {
+        size: Letter;
+        margin: 0.55in 0.6in;
+      }
+
+      .print-body {
+        background: #ffffff;
+        color: #16171a;
+        font-family: var(--font-sans);
+        font-size: 10.5pt;
+        line-height: 1.45;
+      }
+
+      /* On screen this page is previewed in a paper-like column so what you
+         see while iterating matches what Chromium will print. */
+      @media screen {
+        .print-body {
+          max-width: 8.5in;
+          margin-inline: auto;
+          padding: 0.55in 0.6in;
+          box-shadow: 0 0 0 1px #e4e5e9;
+        }
+      }
+
+      @media print {
+        .print-body {
+          padding: 0;
+          box-shadow: none;
+        }
+
+        /* Keep an entry from splitting across a page break mid-way. */
+        .avoid-break {
+          break-inside: avoid;
+        }
+
+        a {
+          text-decoration: none;
+        }
+      }
+    </style>
+  </body>
+</html>
