@@ -21,6 +21,8 @@ const { bodyClass, ...head } = Astro.props;
 <html lang="en">
   <head>
     <BaseHead {...head} />
+    {/* Page-specific head content, e.g. JSON-LD. */}
+    <slot name="head" />
   </head>
   <body
     class:list={[
@@ -43,28 +45,44 @@ const { bodyClass, ...head } = Astro.props;
 
     <Footer />
 
-    <script>
-      // Scroll reveal. Elements opt in with `data-reveal`; CSS keeps them hidden
-      // until `.is-visible` lands. Reduced motion reveals everything at once.
-      const items = document.querySelectorAll<HTMLElement>('[data-reveal]');
+    {/* Scroll reveal. Kept `is:inline` on purpose: the CSS that hides
+        [data-reveal] is gated behind the .js class set by the same kind of
+        inline script in <head>. Bundling this as a module would introduce a
+        window where content is hidden but the revealer has not loaded. */}
+    <script is:inline>
+      (() => {
+        var items = document.querySelectorAll('[data-reveal]');
 
-      if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
-        items.forEach((el) => el.classList.add('is-visible'));
-      } else {
-        const observer = new IntersectionObserver(
-          (entries) => {
-            for (const entry of entries) {
-              if (entry.isIntersecting) {
-                entry.target.classList.add('is-visible');
-                observer.unobserve(entry.target);
+        var revealAll = function () {
+          for (var i = 0; i < items.length; i++) {
+            items[i].classList.add('is-visible');
+          }
+        };
+
+        if (
+          !('IntersectionObserver' in window) ||
+          window.matchMedia('(prefers-reduced-motion: reduce)').matches
+        ) {
+          revealAll();
+          return;
+        }
+
+        var observer = new IntersectionObserver(
+          function (entries) {
+            for (var i = 0; i < entries.length; i++) {
+              if (entries[i].isIntersecting) {
+                entries[i].target.classList.add('is-visible');
+                observer.unobserve(entries[i].target);
               }
             }
           },
           { rootMargin: '0px 0px -10% 0px', threshold: 0.1 },
         );
 
-        items.forEach((el) => observer.observe(el));
-      }
+        for (var i = 0; i < items.length; i++) {
+          observer.observe(items[i]);
+        }
+      })();
     </script>
   </body>
 </html>

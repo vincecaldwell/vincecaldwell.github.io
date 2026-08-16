@@ -172,14 +172,17 @@
     color: var(--t-accent-contrast);
   }
 
-  /* Scroll reveal — opt in with data-reveal. Progressive enhancement:
-     if JS never runs, the fallback below keeps content visible. */
-  [data-reveal] {
+  /* Scroll reveal — opt in with data-reveal.
+     The hidden state is gated behind .js, which the inline script in <head>
+     sets. Without that gate, any failure to run the reveal script would leave
+     the page permanently blank: content hidden by CSS that nothing ever
+     un-hides. Gated this way, no JS simply means no animation. */
+  .js [data-reveal] {
     opacity: 0;
     transform: translate3d(0, 12px, 0);
   }
 
-  [data-reveal].is-visible {
+  .js [data-reveal].is-visible {
     opacity: 1;
     transform: none;
     transition:
@@ -192,7 +195,7 @@
       scroll-behavior: auto;
     }
 
-    [data-reveal] {
+    .js [data-reveal] {
       opacity: 1;
       transform: none;
     }

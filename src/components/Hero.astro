@@ -1,0 +1,46 @@
+---
+import Button from './Button.astro';
+import Icon from './Icon.astro';
+import { AUTHOR, SITE_TAGLINE, RESUME_PDF_PATH } from '../consts';
+---
+
+<section class="relative overflow-hidden border-b border-border-subtle">
+  {/* Decorative accent wash. Sits behind content and is hidden from AT. */}
+  <div
+    aria-hidden="true"
+    class="pointer-events-none absolute inset-0 -z-10 opacity-[0.07]"
+    style="background: radial-gradient(60rem 30rem at 15% -10%, var(--t-accent), transparent 70%);"
+  >
+  </div>
+
+  <div class="mx-auto max-w-page px-6 py-24 sm:py-32 lg:py-40">
+    <p class="font-mono text-sm uppercase tracking-[0.2em] text-accent">
+      {SITE_TAGLINE}
+    </p>
+
+    <h1 class="mt-6 max-w-4xl text-5xl font-bold tracking-tight">
+      {AUTHOR.name}
+    </h1>
+
+    <p class="mt-8 max-w-prose text-lg leading-relaxed text-muted sm:text-xl">
+      {/* TODO: replace with your own positioning statement. Two sentences: what
+          you build, and what makes your work worth someone's time. */}
+      I build reliable backend systems and the developer tooling that makes them
+      easier to run. Currently focused on distributed data pipelines, developer
+      experience, and making complex systems legible to the people who operate
+      them.
+    </p>
+
+    <div class="mt-10 flex flex-wrap items-center gap-3">
+      <Button href="/projects/">
+        View projects
+        <Icon name="arrow-right" size={16} />
+      </Button>
+
+      <Button href={RESUME_PDF_PATH} variant="ghost" download>
+        Download resume
+        <Icon name="download" size={16} />
+      </Button>
+    </div>
+  </div>
+</section>

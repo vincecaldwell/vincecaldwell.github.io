@@ -1,0 +1,69 @@
+---
+import { Image } from 'astro:assets';
+import TechPill from './TechPill.astro';
+import { formatTimeframe, statusLabel, type Project } from '../utils/projects';
+
+interface Props {
+  entry: Project;
+  /** Eager-load the first card's image; it is often the LCP element. */
+  loading?: 'lazy' | 'eager';
+  class?: string;
+}
+
+const { entry, loading = 'lazy', class: className }: Props = Astro.props;
+const { title, summary, stack, cover, coverAlt, status, timeframe } = entry.data;
+
+// Only the title is a real link; the ::after overlay below makes the whole card
+// clickable without giving screen readers a second, unlabelled link.
+const href = `/projects/${entry.id}/`;
+const MAX_PILLS = 4;
+const shown = stack.slice(0, MAX_PILLS);
+const remaining = stack.length - shown.length;
+---
+
+<article
+  class:list={[
+    'group relative flex flex-col overflow-hidden rounded-xl border border-border-subtle bg-bg-raised transition-[transform,border-color,box-shadow] duration-300 ease-out hover:-translate-y-1 hover:border-accent/50 focus-within:border-accent/50',
+    className,
+  ]}
+>
+  {
+    cover && (
+      <div class="aspect-[16/9] overflow-hidden border-b border-border-subtle bg-bg-sunken">
+        <Image
+          src={cover}
+          alt={coverAlt}
+          loading={loading}
+          width={720}
+          height={405}
+          class="size-full object-cover transition-transform duration-500 ease-out group-hover:scale-[1.03]"
+        />
+      </div>
+    )
+  }
+
+  <div class="flex flex-1 flex-col gap-4 p-6">
+    <div class="flex items-center gap-3 font-mono text-2xs uppercase tracking-widest text-faint">
+      <span>{formatTimeframe(timeframe)}</span>
+      <span aria-hidden="true">&middot;</span>
+      <span>{statusLabel(status)}</span>
+    </div>
+
+    <div class="flex flex-col gap-2">
+      <h3 class="text-lg font-semibold leading-snug">
+        <a
+          href={href}
+          class="transition-colors after:absolute after:inset-0 after:content-[''] group-hover:text-accent"
+        >
+          {title}
+        </a>
+      </h3>
+      <p class="text-sm leading-relaxed text-muted">{summary}</p>
+    </div>
+
+    <ul class="mt-auto flex flex-wrap gap-1.5 pt-2">
+      {shown.map((tech) => <TechPill as="li" label={tech} size="sm" />)}
+      {remaining > 0 && <TechPill as="li" label={`+${remaining}`} size="sm" />}
+    </ul>
+  </div>
+</article>

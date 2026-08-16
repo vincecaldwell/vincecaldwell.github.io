@@ -1,0 +1,34 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import Button from '../components/Button.astro';
+import Icon from '../components/Icon.astro';
+
+// GitHub Pages serves dist/404.html automatically for unmatched paths.
+---
+
+<BaseLayout title="Page not found" noindex>
+  <div
+    class="mx-auto flex max-w-page flex-col items-start px-6 py-32 sm:py-40"
+  >
+    <p class="font-mono text-sm uppercase tracking-[0.2em] text-accent">
+      Error 404
+    </p>
+
+    <h1 class="mt-6 text-4xl font-bold tracking-tight">
+      This page doesn't exist
+    </h1>
+
+    <p class="mt-5 max-w-prose text-lg text-muted">
+      The link may be out of date, or the page may have moved. Nothing you did
+      wrong.
+    </p>
+
+    <div class="mt-10 flex flex-wrap gap-3">
+      <Button href="/">
+        Back home
+        <Icon name="arrow-right" size={16} />
+      </Button>
+      <Button href="/projects/" variant="ghost">Browse projects</Button>
+    </div>
+  </div>
+</BaseLayout>

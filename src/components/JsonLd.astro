@@ -1,0 +1,16 @@
+---
+/**
+ * Emits a schema.org JSON-LD block.
+ *
+ * `set:html` is used deliberately: escaping the JSON as text content would
+ * corrupt it, and the value is built server-side from our own data, never from
+ * user input.
+ */
+interface Props {
+  schema: Record<string, unknown>;
+}
+
+const { schema }: Props = Astro.props;
+---
+
+<script type="application/ld+json" set:html={JSON.stringify(schema)} is:inline />

@@ -38,6 +38,22 @@ try {
       // Let fonts settle so text is not captured mid-swap.
       await page.evaluate(() => document.fonts.ready);
 
+      // Force scroll-reveal elements into their settled state before capturing.
+      //
+      // A fullPage screenshot is not a real viewport, so IntersectionObserver
+      // does not reliably fire for below-the-fold content during scripted
+      // scrolling — the capture then shows blank regions that look like a
+      // rendering bug but are just un-triggered animation. Applying the class
+      // directly captures the state a real visitor ends up in, deterministically.
+      await page.evaluate(() => {
+        document
+          .querySelectorAll('[data-reveal]')
+          .forEach((el) => el.classList.add('is-visible'));
+      });
+
+      // Let the reveal transitions (0.6s) and their stagger delays finish.
+      await page.waitForTimeout(1100);
+
       const slug = path.replace(/\//g, '_').replace(/^_|_$/g, '') || 'home';
       const file = `${outDir}/${slug}-${theme}.png`;
       await page.screenshot({ path: file, fullPage: true });

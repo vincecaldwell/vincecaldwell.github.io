@@ -1,0 +1,121 @@
+---
+import type { GetStaticPaths } from 'astro';
+import { Image } from 'astro:assets';
+import { render } from 'astro:content';
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import ProjectMeta from '../../components/ProjectMeta.astro';
+import Prose from '../../components/Prose.astro';
+import Icon from '../../components/Icon.astro';
+import { getPublishedProjects, type Project } from '../../utils/projects';
+
+export const getStaticPaths: GetStaticPaths = async () => {
+  const projects = await getPublishedProjects();
+
+  // Prev/next follow the same order as the projects index, so navigation
+  // matches what the reader just saw.
+  return projects.map((entry, i) => ({
+    params: { id: entry.id },
+    props: {
+      entry,
+      prev: projects[i - 1] ?? null,
+      next: projects[i + 1] ?? null,
+    },
+  }));
+};
+
+interface Props {
+  entry: Project;
+  prev: Project | null;
+  next: Project | null;
+}
+
+const { entry, prev, next } = Astro.props as Props;
+const { Content } = await render(entry);
+const { title, summary, cover, coverAlt } = entry.data;
+---
+
+<BaseLayout title={title} description={summary} type="article">
+  <article class="mx-auto max-w-page px-6 py-16 sm:py-24">
+    <a
+      href="/projects/"
+      class="group inline-flex items-center gap-2 font-mono text-xs uppercase tracking-widest text-faint transition-colors hover:text-accent"
+    >
+      <Icon
+        name="arrow-right"
+        size={14}
+        class="rotate-180 transition-transform duration-200 group-hover:-translate-x-0.5"
+      />
+      All projects
+    </a>
+
+    <header class="mt-8 max-w-prose">
+      <h1 class="text-4xl font-bold tracking-tight">{title}</h1>
+      <p class="mt-5 text-lg text-muted">{summary}</p>
+    </header>
+
+    {
+      cover && (
+        <div class="mt-12 overflow-hidden rounded-xl border border-border-subtle bg-bg-sunken">
+          <Image
+            src={cover}
+            alt={coverAlt}
+            loading="eager"
+            width={1600}
+            height={900}
+            class="w-full"
+          />
+        </div>
+      )
+    }
+
+    <div class="mt-12 grid gap-12 lg:grid-cols-[1fr_18rem] lg:items-start lg:gap-16">
+      <Prose class="min-w-0">
+        <Content />
+      </Prose>
+
+      {/* Sticky on wide screens so links stay reachable while reading. */}
+      <div class="lg:sticky lg:top-28">
+        <ProjectMeta data={entry.data} />
+      </div>
+    </div>
+
+    {
+      (prev || next) && (
+        <nav
+          class="mt-20 grid gap-4 border-t border-border-subtle pt-8 sm:grid-cols-2"
+          aria-label="More projects"
+        >
+          {prev ? (
+            <a
+              href={`/projects/${prev.id}/`}
+              class="group rounded-lg border border-border-subtle p-5 transition-colors hover:border-accent/50"
+            >
+              <span class="font-mono text-2xs uppercase tracking-widest text-faint">
+                Previous
+              </span>
+              <span class="mt-1.5 block font-medium transition-colors group-hover:text-accent">
+                {prev.data.title}
+              </span>
+            </a>
+          ) : (
+            <div />
+          )}
+
+          {next && (
+            <a
+              href={`/projects/${next.id}/`}
+              class="group rounded-lg border border-border-subtle p-5 transition-colors hover:border-accent/50 sm:text-right"
+            >
+              <span class="font-mono text-2xs uppercase tracking-widest text-faint">
+                Next
+              </span>
+              <span class="mt-1.5 block font-medium transition-colors group-hover:text-accent">
+                {next.data.title}
+              </span>
+            </a>
+          )}
+        </nav>
+      )
+    }
+  </article>
+</BaseLayout>

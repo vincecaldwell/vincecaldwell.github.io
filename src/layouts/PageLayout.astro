@@ -20,6 +20,8 @@ const pageHeading = heading === false ? null : (heading ?? head.title);
 ---
 
 <BaseLayout {...head}>
+  <slot name="head" slot="head" />
+
   <div
     class:list={[
       'mx-auto px-6 py-16 sm:py-24',
