@@ -1,6 +1,6 @@
 ---
 import ThemeScript from './ThemeScript.astro';
-import { SITE_TITLE, SITE_DESCRIPTION } from '../consts';
+import { SITE_TITLE, SITE_DESCRIPTION, SITE_NOINDEX } from '../consts';
 import '../styles/global.css';
 
 interface Props {
@@ -30,6 +30,9 @@ const socialImage = new URL(image, Astro.site);
 
 // The home page shows the bare name; every other page gets a suffix.
 const fullTitle = title === SITE_TITLE ? title : `${title} — ${SITE_TITLE}`;
+
+// Either the site-wide temporary flag or a per-page opt-out (404, print resume).
+const isNoindex = SITE_NOINDEX || noindex;
 ---
 
 {/* Theme must resolve before the stylesheet to avoid a flash. */}
@@ -43,7 +46,7 @@ const fullTitle = title === SITE_TITLE ? title : `${title} — ${SITE_TITLE}`;
 <meta name="description" content={description} />
 <link rel="canonical" href={canonical} />
 
-{noindex && <meta name="robots" content="noindex, nofollow" />}
+{isNoindex && <meta name="robots" content="noindex, nofollow" />}
 
 {/* Browser chrome colour per theme, matching --t-bg in global.css */}
 <meta name="color-scheme" content="dark light" />
