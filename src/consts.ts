@@ -3,6 +3,18 @@
  * find them" lives here, so updating identity never means grepping components.
  */
 
+/**
+ * TEMPORARY: keeps the site out of search results while the content is still
+ * placeholder. Drives both the robots meta tag on every page and robots.txt.
+ *
+ * >>> Set this to false once the real content is in. <<<
+ *
+ * Leaving it true indefinitely means the site never gets indexed, which for a
+ * portfolio is the whole point of having one. Nothing else needs changing —
+ * flip this, push, and the next deploy makes the site indexable.
+ */
+export const SITE_NOINDEX = true;
+
 export const SITE_TITLE = 'Vince Caldwell';
 export const SITE_TAGLINE = 'Senior Software Engineer';
 export const SITE_DESCRIPTION =
