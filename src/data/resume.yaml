@@ -4,81 +4,140 @@
 # The `file()` loader needs a top-level keyed object, so everything hangs off
 # one `main` entry. Validated by the `resume` collection in src/content.config.ts,
 # so a typo fails the build rather than silently rendering an empty section.
-#
-# TODO: replace all placeholder content below with your real history.
 
 main:
   summary: >-
-    TODO: three or four sentences. Lead with what you build and the scale you
-    build it at, then the domains you know well, then what you are looking for.
-    Recruiters read this paragraph and little else, so make it concrete —
-    "distributed data systems handling millions of events per day" beats
-    "passionate about technology".
+    Senior software engineer with six years building scalable SaaS products,
+    modernizing legacy systems, and automating workflows in the cloud. I work
+    across TypeScript/React and C#/.NET, designing reliable distributed systems
+    and clean, maintainable architectures. I'm known for turning complex
+    requirements into practical, high-impact solutions that make the product
+    better and help engineering teams move faster.
 
   experience:
     - role: Senior Software Engineer
-      org: 'TODO: Company Name'
-      location: 'TODO: City, State (or Remote)'
-      start: '2023'
+      org: PoliteMail
+      start: June 2023
       end: null # null renders as "Present"
       tags:
+        - C#/.NET
         - TypeScript
-        - Go
-        - AWS
+        - React
+        - Azure
+        - Microsoft Graph API
       bullets:
         - >-
-          TODO: Lead with impact, not responsibility. "Cut p99 checkout latency
-          from 1.8s to 240ms by replacing N+1 queries with a batched loader"
-          beats "responsible for backend performance".
+          Architected and delivered a self-service onboarding system that
+          automated licensing, feature enforcement, and provisioning. Built the
+          workflows using Azure Durable Functions and REST APIs in C#/.NET and
+          TypeScript/Node.js, reducing manual onboarding work and speeding up
+          customer activation.
         - >-
-          TODO: One bullet showing scope beyond writing code — a design others
-          adopted, a migration you led, an on-call burden you reduced.
+          Built a secure mail delivery service as an Azure App Service WebJob
+          using the Microsoft Graph API, with authentication, token management,
+          retry handling, and throttling controls to improve reliability and
+          delivery.
         - >-
-          TODO: One bullet showing you raise the people around you — mentoring,
-          review culture, documentation others actually use.
+          Integrated a modern WYSIWYG editor into a TypeScript/React front end,
+          improving the user experience and enabling customers to build email
+          templates in minutes instead of hours.
+        - >-
+          Used GitHub Copilot and Claude Code to speed up development, simplify
+          complex work, and give the team more time to focus on higher-value
+          architectural tasks.
+        - >-
+          Led code reviews, mentored junior developers, and improved developer
+          experience by refining pipelines, reducing development friction, and
+          raising code quality across the team.
 
     - role: Software Engineer
-      org: 'TODO: Previous Company'
-      location: 'TODO: City, State'
-      start: '2020'
-      end: '2023'
+      org: PoliteMail
+      start: Apr 2022
+      end: June 2023
       tags:
-        - Python
-        - PostgreSQL
+        - React
+        - Jest
+        - C#
       bullets:
-        - 'TODO: Impact-first bullet with a number in it.'
-        - 'TODO: Second bullet.'
+        - >-
+          Modernized legacy front-end components by implementing React hooks and
+          functional patterns, improving maintainability, performance, and
+          developer productivity.
+        - >-
+          Built and maintained unit and integration tests with Jest and C#,
+          improving reliability and reducing regressions.
+        - >-
+          Delivered high-quality documentation and onboarding guides that
+          streamlined knowledge sharing and decreased new developer ramp-up time
+          by 40%.
+
+    - role: Software Engineer
+      org: Genesis Global Technologies
+      start: Oct 2020
+      end: Apr 2022
+      tags:
+        - REST APIs
+        - Integrations
+      bullets:
+        - >-
+          Integrated the proprietary platform with APIs such as HubSpot and
+          Zapier, automating client workflows and reducing manual operational
+          processes.
+        - >-
+          Designed configurable homepage and dashboard components, improving
+          usability and enabling clients to tailor their experience without
+          engineering support.
 
   education:
-    - credential: 'TODO: B.S. in Computer Science'
-      org: 'TODO: University Name'
-      location: 'TODO: City, State'
-      end: '2020'
-      detail: 'TODO: optional — honors, relevant coursework, or delete this line.'
+    - credential: B.S. in Business Management and Finance
+      org: Wilmington University
 
   skills:
-    - label: Languages
+    - label: Core Languages
       items:
         - TypeScript
-        - Go
+        - JavaScript
+        - C#
+        - T-SQL
         - Python
-        - SQL
-    - label: Backend
-      items:
-        - Node.js
-        - PostgreSQL
-        - Redis
-        - Kafka
-    - label: Frontend
+        - HTML/CSS
+        - PowerShell
+        - Bash
+    - label: Frameworks
       items:
         - React
-        - Astro
-        - Tailwind CSS
-    - label: Infrastructure
+        - Redux
+        - ASP.NET Core
+        - .NET (Framework & 6/7/8)
+        - Node.js
+        - Express
+    - label: Cloud & DevOps
       items:
-        - AWS
+        - Azure App Service
+        - Azure Functions
+        - Azure SQL
+        - Azure DevOps
+        - CI/CD Pipelines
         - Docker
-        - Terraform
-        - GitHub Actions
+    - label: Tools & Testing
+      items:
+        - Jest
+        - xUnit
+        - Postman
+        - SonarQube
+        - Storybook
+        - Figma
+        - GitHub
+        - Webpack
+        - REST APIs
 
-  certifications: []
+  certifications:
+    - name: 'Microsoft Certified: DevOps Engineer Expert'
+      issuer: Microsoft
+      year: Expires Dec 2026
+    - name: 'Microsoft Certified: Azure Developer Associate'
+      issuer: Microsoft
+      year: Expires Mar 2027
+    - name: 'Microsoft Certified: Azure Administrator Associate'
+      issuer: Microsoft
+      year: Expires Dec 2026
