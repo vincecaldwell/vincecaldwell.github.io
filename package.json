@@ -18,7 +18,8 @@
     "fonts:vendor": "node scripts/vendor-fonts.mjs",
     "screenshot": "node scripts/screenshot.mjs",
     "icons": "node scripts/make-icons.mjs",
-    "audit:a11y": "node scripts/audit-a11y.mjs"
+    "audit:a11y": "node scripts/audit-a11y.mjs",
+    "prune:print": "node scripts/prune-print-route.mjs"
   },
   "dependencies": {
     "@astrojs/mdx": "^7.0.5",

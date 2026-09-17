@@ -18,16 +18,19 @@ export const SITE_NOINDEX = true;
 export const SITE_TITLE = 'Vince Caldwell';
 export const SITE_TAGLINE = 'Senior Software Engineer';
 export const SITE_DESCRIPTION =
-  // TODO: replace with your own one-sentence positioning statement.
-  'Senior software engineer building reliable, well-crafted systems — and the tools that make them easier to run.';
+  'Senior software engineer building scalable SaaS products across TypeScript/React and C#/.NET, with a focus on reliable distributed systems in Azure.';
 
 export const AUTHOR = {
   name: 'Vince Caldwell',
-  // TODO: replace with your actual job title / current role.
   jobTitle: 'Senior Software Engineer',
-  email: 'vcaldwel8@yahoo.com',
-  // TODO: replace with your city, or delete if you would rather not list it.
-  location: 'TODO: City, State',
+  email: 'Vince.L.Caldwell@gmail.com',
+  location: 'Jupiter, FL',
+  /**
+   * Shown only in the downloadable PDF, never on the public web pages — a phone
+   * number on an indexable page is a spam magnet, while a recruiter reading the
+   * PDF expects to find one.
+   */
+  phone: '302-993-6247',
 } as const;
 
 /** Absolute path (from site root) of the generated resume PDF. */
@@ -51,8 +54,7 @@ export const SOCIAL_LINKS: SocialLink[] = [
   },
   {
     label: 'LinkedIn',
-    // TODO: replace with your real LinkedIn profile URL.
-    href: 'https://www.linkedin.com/in/TODO',
+    href: 'https://www.linkedin.com/in/Vince-Caldwell',
     icon: 'linkedin',
     primary: true,
   },

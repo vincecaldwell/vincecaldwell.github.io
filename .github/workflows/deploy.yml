@@ -65,8 +65,15 @@ jobs:
           node scripts/make-resume-pdf.mjs
 
           # Fails the build on a contrast, heading-order or alt-text
-          # regression, in both themes.
+          # regression, in both themes. Runs while /resume/print/ is still
+          # present so the print layout is audited too.
           node scripts/audit-a11y.mjs
+
+          # Drop /resume/print/ from what gets deployed. It exists only as the
+          # source for the PDF above, and shipping it would publish the resume
+          # contact block as scrapable HTML. Refuses to run if the PDF is
+          # missing, so we can never lose both.
+          node scripts/prune-print-route.mjs
         env:
           PDF_BASE_URL: http://localhost:4321
           PREVIEW_URL: http://localhost:4321
