@@ -17,9 +17,11 @@ export const GET: APIRoute = ({ site }) => {
     // could still be indexed from external links — with no snippet and no way
     // for us to say "don't index it". Blocking crawling and preventing indexing
     // are different things, and only the meta tag does the latter.
+    //
+    // /resume/print/ is deliberately NOT listed here. It is pruned from the
+    // deployed output by scripts/prune-print-route.mjs, and a Disallow line
+    // would only advertise a path that no longer exists.
     'Allow: /',
-    // Exists only as the source for the generated resume PDF.
-    'Disallow: /resume/print/',
     '',
   ];
 
