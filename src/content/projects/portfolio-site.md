@@ -17,7 +17,7 @@ timeframe:
 repoUrl: https://github.com/vincecaldwell/vincecaldwell.github.io
 liveUrl: https://vincecaldwell.github.io
 featured: true
-order: 2
+order: 3
 status: shipped
 ---
 

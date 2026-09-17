@@ -15,7 +15,7 @@ timeframe:
   start: 2026-08-01
   end: null
 featured: true
-order: 1
+order: 2
 status: in-progress
 ---
 
