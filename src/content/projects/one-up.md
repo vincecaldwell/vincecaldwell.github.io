@@ -59,24 +59,23 @@ were exactly the ones that only appear when real pieces talk to each other.
 
 The most useful thing this project taught me had nothing to do with features.
 
-Neon bills wall-clock awake time rather than queries, and its compute cannot
-suspend while any client connection stays open. Npgsql's connection pool holds
-idle connections open indefinitely by default, so the database never slept — and
-a month's free allowance burned in eighteen days.
+The managed Postgres I use bills wall-clock awake time rather than queries, and
+its compute cannot suspend while any client connection stays open. Npgsql's
+connection pool holds idle connections open indefinitely by default, so the
+database never slept — and a month's allowance burned in eighteen days.
 
-The pool was the easy half: `MinPoolSize=0`, a short connection idle lifetime and
-aggressive pruning let the compute suspend between requests. The real culprit was
-invisible from inside the repository. An external uptime monitor was polling the
-database-backed readiness endpoint every five minutes against a five-minute
-autosuspend window, so the database structurally never got a chance to sleep.
-No amount of reading the code would have found it, because the cause lived in a
-third-party dashboard.
+The pool was the easy half: capping the minimum pool size at zero, with a short
+idle lifetime and aggressive pruning, let the compute suspend between requests.
+The real culprit was invisible from inside the repository. An external uptime
+monitor was polling on a shorter interval than the database's autosuspend
+window, so the database structurally never got a chance to sleep. No amount of
+reading the code would have found it, because the cause lived in a third-party
+dashboard that the repo has no knowledge of.
 
-The fix routes uptime checks at the database-free health endpoint, with a
-separate hourly readiness check for dead-database alerting. That trade-off is
-deliberate and documented: the platform can no longer detect a broken database
-itself, so that detection moves to the hourly monitor and error reporting
-instead.
+What I took from it: with managed infrastructure, the billing model is part of
+the architecture. Connection pooling had always been a performance concern to
+me, and here it was a cost one. And the monitoring you add for safety can
+quietly become the thing you are paying for.
 
 ## Outcome
 
